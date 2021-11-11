@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30413.136
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TP CAI 4", "TP CAI 4.csproj", "{69C9064E-EAFB-40A3-AE28-E622D48242F4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{69C9064E-EAFB-40A3-AE28-E622D48242F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{69C9064E-EAFB-40A3-AE28-E622D48242F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69C9064E-EAFB-40A3-AE28-E622D48242F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{69C9064E-EAFB-40A3-AE28-E622D48242F4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D79FBD2C-CBE7-4040-A46E-750F1E9B3C40}
+	EndGlobalSection
+EndGlobal
