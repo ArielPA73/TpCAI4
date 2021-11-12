@@ -8,9 +8,17 @@ namespace TP_CAI
 {
     class Program
     {
+
         static void Main(string[] args)
         {
+            Console.Title = "Portal de Autogestión - Clientes Corporativos";
+            //var usuario = new Cliente();
+            //usuario.IDcliente = ValidarUsuario();
+
             bool salir = false;
+
+            Console.WriteLine("Por favor, ingrese su número de cliente.");
+            var ingreso = Convert.ToInt32(Console.ReadLine());
 
             do
             {
@@ -28,7 +36,7 @@ namespace TP_CAI
                 switch (opcion)
                 {
                     case "1":
-                        SolicitarServicio();
+                        SolicitarServicio(ingreso);
                         break;
 
                     case "2":
@@ -51,9 +59,10 @@ namespace TP_CAI
             } while (!salir);
         }
 
-        private static void SolicitarServicio()
+        private static void SolicitarServicio(int idcliente)
         {
-            var solicitud = SolicitudServicio.IngresarSolicitud();
+            var solicitud = SolicitudServicio.IngresarSolicitud(idcliente);
+            SolicitudServicio.AgregarSolicitud(solicitud);
         }
 
         private static void ConsultarEstadoServicio()
@@ -68,12 +77,12 @@ namespace TP_CAI
                 var key = Console.ReadKey(intercept: true);
                 if (key.Key == ConsoleKey.S)
                 {
-                    SolicitudServicio.MostrarEstado(solicitud);
+                    solicitud.MostrarEstadoSolicitud();
                     flag = true;
                 }
                 else if (key.Key == ConsoleKey.N)
                 {
-                    Console.WriteLine("Operación cancelada.");
+                    Console.WriteLine("Operación cancelada." + Environment.NewLine);
                     flag = true;
                 }
                 else
@@ -96,12 +105,12 @@ namespace TP_CAI
                 var key = Console.ReadKey(intercept: true);
                 if (key.Key == ConsoleKey.S)
                 {
-                    CuentaCorriente.MostrarEstado(cuenta);
+                    cuenta.MostrarEstadoCuenta();
                     flag = true;
                 }
                 else if (key.Key == ConsoleKey.N)
                 {
-                    Console.WriteLine("Operación cancelada.");
+                    Console.WriteLine("Operación cancelada." + Environment.NewLine);
                     flag = true;
                 }
                 else
@@ -111,6 +120,42 @@ namespace TP_CAI
 
             } while (flag == false);
         }
+
+        private static int ValidarUsuario()
+        {
+            Console.WriteLine("Bienvenido al Portal de Clientes Corporativos." + Environment.NewLine);
+            bool flag = false;
+            int idcliente = 0;
+
+            do
+            {
+                Console.WriteLine("Por favor, ingrese su número de cliente.");
+                var ingreso = Console.ReadLine();
+
+                if (!int.TryParse(ingreso, out var salida))
+                {
+                    Console.WriteLine("No ha ingresado un número de cliente válido. Intente nuevamente." + Environment.NewLine);
+                    break;
+                }
+
+                bool existe = Cliente.ExisteID(salida);
+
+                if (!existe)
+                {
+                    Console.WriteLine("El ID ingresado no pertenece a ningún cliente registrado. Intente nuevamente." + Environment.NewLine);
+                    break;
+                }
+
+                if (existe)
+                {
+                    flag = true;
+                }
+
+                idcliente = salida;
+
+            } while (!flag);
+
+            return idcliente;
+        }
     }
 }
-
