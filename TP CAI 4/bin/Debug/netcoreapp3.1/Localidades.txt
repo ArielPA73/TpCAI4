@@ -1,0 +1,40 @@
+La Plata;Buenos Aires;Centro;Argentina
+Capital Federal;Capital Federal;Centro;Argentina
+San Fernando;Catamarca;Norte;Argentina
+Resistencia;Chaco;NEA;Argentina
+Rawson;Chubut;Patagonia;Argentina
+Córdoba;Córdoba;Centro;Argentina
+Corrientes;Corrientes;Litoral;Argentina
+Paraná;Entre Ríos;Litoral;Argentina
+Formosa;Formosa;NEA;Argentina
+San Salvador;Jujuy;NOA;Argentina
+Santa Rosa;La Pampa;Centro;Argentina
+La Rioja;La Rioja;Cuyo;Argentina
+Mendoza;Mendoza;Cuyo;Argentina
+Posadas;Misiones;Litoral;Argentina
+Neuquén;Neuquén;Patagonia;Argentina
+Viedma;Río Negro;Patagonia;Argentina
+Salta;Salta;NOA;Argentina
+San Juan;San Juan;Cuyo;Argentina
+San Luis;San Luis;Cuyo;Argentina
+Río Gallegos;Santa Cruz;Patagonia;Argentina
+Santa Fe;Santa Fe;Litoral;Argentina
+Santiago del Estero;Santiago del Estero;NEA;Argentina
+Ushuaia;Tierra del Fuego;Patagonia;Argentina
+Tucumán;Tucumán;NOA;Argentina
+Montevideo;null;null;Uruguay
+Santiago;null;null;Chile
+Asunción;null;null;Paraguay
+Sucre;null;null;Bolivia
+Brasilia;null;null;Brasil
+Ciudad Evita;Buenos Aires;Centro;Argentina
+San Isidro;Buenos Aires;Centro;Argentina
+Villa Ballester;Buenos Aires;Centro;Argentina
+Luján de Cuyo;Mendoza;Cuyo;Argentina
+Venado Tuerto;Santa Fe;Litoral;Argentina
+Rosario;Santa Fe;Litoral;Argentina
+Plaza Huincul;Neuquén;Patagonia;Argentina
+Río Grande;Tierra del Fuego;Patagonia;Argentina
+Río Cuarto;Córdoba;Centro;Argentina
+Trelew;Chubut;Patagonia;Argentina
+Esquel;Chubut;Patagonia;Argentina
