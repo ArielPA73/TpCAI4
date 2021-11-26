@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,21 +9,24 @@ namespace TP_CAI
 {
     class Program
     {
-
+        
         static void Main(string[] args)
         {
             Console.Title = "Portal de Autogestión - Clientes Corporativos";
-            //var usuario = new Cliente();
-            //usuario.IDcliente = ValidarUsuario();
 
+            SolicitudServicio.CargarSolicitudes();
+            Cliente.CargarClientes();
+            CuentaCorriente.CargarCuentas();
+            Tarifa.CargarTarifario();
+            Localidad.CargarLocalidades();
+
+            var idcliente = ValidarUsuario();
+            
             bool salir = false;
-
-            Console.WriteLine("Por favor, ingrese su número de cliente.");
-            var ingreso = Convert.ToInt32(Console.ReadLine());
 
             do
             {
-                Console.WriteLine("MENÚ PRINCIPAL");
+                Console.WriteLine(Environment.NewLine + "MENÚ PRINCIPAL");
                 Console.WriteLine("--------------");
 
                 Console.WriteLine("1- Solicitar servicio de correspondencia o encomienda.");
@@ -36,7 +40,7 @@ namespace TP_CAI
                 switch (opcion)
                 {
                     case "1":
-                        SolicitarServicio(ingreso);
+                        SolicitarServicio(idcliente);
                         break;
 
                     case "2":
@@ -62,19 +66,30 @@ namespace TP_CAI
         private static void SolicitarServicio(int idcliente)
         {
             var solicitud = SolicitudServicio.IngresarSolicitud(idcliente);
-            SolicitudServicio.AgregarSolicitud(solicitud);
+            Console.WriteLine(Environment.NewLine + "Solicitud creada con éxito.");
+            Console.WriteLine(Environment.NewLine + "Presione ENTER para volver al menú principal.");
+            Console.ReadKey();
+            Console.Clear();
         }
 
         private static void ConsultarEstadoServicio()
         {
             var solicitud = SolicitudServicio.SeleccionarSolicitud();
-            solicitud.MostrarSolicitud();
+
+            if(solicitud == null)
+            {
+                goto salida;
+            }
+
             bool flag = false;
+            Console.WriteLine(Environment.NewLine + "La solicitud seleccionada es:");
+            solicitud.MostrarSolicitud();
 
             do
             {
-                Console.WriteLine($"La solicitud seleccionada es: {solicitud.Titulo}, ¿está usted seguro? (S/N)");
+                Console.WriteLine(Environment.NewLine + "¿Está seguro de que desea continuar? (S/N)");
                 var key = Console.ReadKey(intercept: true);
+                
                 if (key.Key == ConsoleKey.S)
                 {
                     solicitud.MostrarEstadoSolicitud();
@@ -82,27 +97,41 @@ namespace TP_CAI
                 }
                 else if (key.Key == ConsoleKey.N)
                 {
-                    Console.WriteLine("Operación cancelada." + Environment.NewLine);
+                    Console.WriteLine(Environment.NewLine + "Operación cancelada.");
                     flag = true;
                 }
                 else
                 {
-                    Console.WriteLine("Usted ingresó un valor incorrecto, intente de nuevo." + Environment.NewLine);
+                    Console.WriteLine(Environment.NewLine + "Usted ingresó un valor incorrecto, intente de nuevo.");
+                    flag = false;
                 }
 
             } while (flag == false);
+
+            salida:
+            Console.WriteLine(Environment.NewLine + "Presione ENTER para volver al menú principal.");
+            Console.ReadKey();
+            Console.Clear();
         }
 
         private static void ConsultarEstadoCuenta()
         {
             var cuenta = CuentaCorriente.SeleccionarCuenta();
-            cuenta.MostrarCuenta();
+
+            if(cuenta == null)
+            {
+                goto salida;
+            }
+
             bool flag = false;
+            Console.WriteLine(Environment.NewLine + "La cuenta seleccionada es:");
+            cuenta.MostrarCuenta();
 
             do
             {
-                Console.WriteLine($"La cuenta seleccionada es: {cuenta.Titulo}, ¿está usted seguro? (S/N)");
+                Console.WriteLine(Environment.NewLine + "¿Está seguro de que desea continuar? (S/N)");
                 var key = Console.ReadKey(intercept: true);
+
                 if (key.Key == ConsoleKey.S)
                 {
                     cuenta.MostrarEstadoCuenta();
@@ -110,15 +139,21 @@ namespace TP_CAI
                 }
                 else if (key.Key == ConsoleKey.N)
                 {
-                    Console.WriteLine("Operación cancelada." + Environment.NewLine);
+                    Console.WriteLine(Environment.NewLine + "Operación cancelada.");
                     flag = true;
                 }
                 else
                 {
-                    Console.WriteLine("Usted ingresó un valor incorrecto, intente de nuevo." + Environment.NewLine);
+                    Console.WriteLine(Environment.NewLine +"Usted ingresó un valor incorrecto, intente de nuevo.");
+                    flag = false;
                 }
 
             } while (flag == false);
+
+            salida:
+            Console.WriteLine(Environment.NewLine + "Presione ENTER para volver al menú principal.");
+            Console.ReadKey();
+            Console.Clear();
         }
 
         private static int ValidarUsuario()
@@ -127,26 +162,26 @@ namespace TP_CAI
             bool flag = false;
             int idcliente = 0;
 
+            Console.WriteLine("Por favor, ingrese su número de cliente.");
             do
             {
-                Console.WriteLine("Por favor, ingrese su número de cliente.");
                 var ingreso = Console.ReadLine();
 
-                if (!int.TryParse(ingreso, out var salida))
+                if(!int.TryParse(ingreso, out var salida))
                 {
-                    Console.WriteLine("No ha ingresado un número de cliente válido. Intente nuevamente." + Environment.NewLine);
-                    break;
+                    Console.WriteLine(Environment.NewLine + "No ha ingresado un número de cliente válido. Intente nuevamente.");
+                    continue;
                 }
 
                 bool existe = Cliente.ExisteID(salida);
 
-                if (!existe)
+                if(!existe)
                 {
-                    Console.WriteLine("El ID ingresado no pertenece a ningún cliente registrado. Intente nuevamente." + Environment.NewLine);
-                    break;
+                    Console.WriteLine(Environment.NewLine + "El ID ingresado no pertenece a ningún cliente registrado. Intente nuevamente.");
+                    continue;
                 }
 
-                if (existe)
+                if(existe)
                 {
                     flag = true;
                 }
@@ -155,7 +190,9 @@ namespace TP_CAI
 
             } while (!flag);
 
+            Console.Clear();
             return idcliente;
         }
+
     }
 }

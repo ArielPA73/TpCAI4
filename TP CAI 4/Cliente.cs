@@ -11,24 +11,11 @@ namespace TP_CAI
     {
         public Cliente()
         {
-            string nombreArchivo = "RegistroClientes.txt";
-
-            if (File.Exists(nombreArchivo))
-            {
-                using (var reader = new StreamReader(nombreArchivo))
-                {
-                    while (!reader.EndOfStream)
-                    {
-                        var linea = reader.ReadLine();
-                        var cliente = new Cliente(linea);
-                        RegistroClientes.Add(cliente.IDcliente, cliente);
-                    }
-                }
-            }
+            
         }
 
-        public Cliente(string linea)
-        {
+        public Cliente (string linea)
+        {   
             var datos = linea.Split(';');
             IDcliente = int.Parse(datos[0]);
             username = datos[1];
@@ -36,7 +23,7 @@ namespace TP_CAI
             numtelefono = int.Parse(datos[3]);
             IDcuenta = int.Parse(datos[4]);
             RazonSocial = datos[5];
-            CUIT = int.Parse(datos[6]);
+            CUIT = long.Parse(datos[6]);
         }
 
         public int IDcliente { get; set; }
@@ -45,7 +32,7 @@ namespace TP_CAI
         public int numtelefono { get; set; }
         public int IDcuenta { get; set; }
         public string RazonSocial { get; set; }
-        public int CUIT { get; set; }
+        public long CUIT { get; set; }
 
         static readonly Dictionary<int, Cliente> RegistroClientes = new Dictionary<int, Cliente>();
 
@@ -72,12 +59,12 @@ namespace TP_CAI
 
         public static Cliente CrearModeloBusqueda(int idcliente)
         {
-            var modelo = new Cliente();
+            var modelo = new Cliente();    
             modelo.IDcliente = idcliente;
 
             return modelo;
         }
-
+        
         public bool Comparacion(Cliente modelo)
         {
             if (IDcliente != modelo.IDcliente)
@@ -87,6 +74,24 @@ namespace TP_CAI
             else
             {
                 return true;
+            }
+        }
+
+        public static void CargarClientes()
+        {
+            string nombreArchivo = "RegistroClientes.txt";
+
+            if (File.Exists(nombreArchivo))
+            {
+                using (var reader = new StreamReader(nombreArchivo))
+                {
+                    while (!reader.EndOfStream)
+                    {
+                        var linea = reader.ReadLine();
+                        var cliente = new Cliente(linea);
+                        RegistroClientes.Add(cliente.IDcliente, cliente);
+                    }
+                }
             }
         }
     }

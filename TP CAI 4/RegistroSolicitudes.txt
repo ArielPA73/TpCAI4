@@ -1,0 +1,10 @@
+56834;8625;Correspondencia;0.5;Luro 2304;Juan Rodriguez;Recibida;205.5;Capital Federal;Capital Federal;Capital Federal;Capital Federal;Argentina;Si;Si;Si;No
+94856;5748;Encomienda;5;Pasteur 759;Lorena Martiarena;En tránsito;250;Ciudad Evita;Buenos Aires;San Isidro;Buenos Aires;Argentina;No;Si;Si;No
+12348;9453;Correspondencia;0.5;Mendía 125;Genaro Golgi;Cerrada;55;Villa Ballester;Buenos Aires;Luján de Cuyo;Mendoza;Argentina;Si;No;No;No
+03459;9254;Encomienda;12;Lavalleja 202;Ricardo LaPalma;Recibida;100;Venado Tuerto;Santa Fé;Rosario;Santa Fé;Argentina;No;No;No;No
+83740;8921;Correspondencia;0.5;Wilde 1643;Marta Sanchez;En tránsito;150;Plaza Huincul;Neuquén;Río Grande;Tierra del Fuego;Argentina;No;No;Si;No
+95853;5748;Encomienda;18;Illia 5300;Azul Gimenez;Cerrada;650;Santa Rosa;La Pampa;Sucre;null;Bolivia;Si;No;Si;Si
+84533;8625;Correspondencia;0.5;Rivadavia 354;Roberto Moro;En tránsito;350;Rio Cuarto;Córdoba;Montevideo;null;Uruguay;No;Si;No;Si
+48576;1209;Encomienda;23;Gurruchaga 98;Josefina Gorostidi;Cerrada;210;Trelew;Chubut;Esquel;Chubut;Argentina;Si;Si;No;No
+63640;7564;Encomienda;28;Alvear 1100;Laura Posto;En tránsito;Cerrada;120;Resistencia;Chaco;Resistencia;Chaco;Argentina;No;No;Si;No
+87674;3984;Encomienda;7;Jujuy 20;Gustavo Diar;Cerrada;210;Paraná;Entre Ríos;Formosa;Formosa;Argentina;Si;No;Si;No

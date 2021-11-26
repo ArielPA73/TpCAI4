@@ -12,18 +12,7 @@ namespace TP_CAI
         const string nombreArchivo = "RegistroCuentas.txt";
         public CuentaCorriente()
         {
-            if (File.Exists(nombreArchivo))
-            {
-                using (var reader = new StreamReader(nombreArchivo))
-                {
-                    while (!reader.EndOfStream)
-                    {
-                        var linea = reader.ReadLine();
-                        var cuenta = new CuentaCorriente(linea);
-                        RegistroCuentas.Add(cuenta.IDcuenta, cuenta);
-                    }
-                }
-            }
+            
         }
 
         public CuentaCorriente(string linea)
@@ -47,14 +36,6 @@ namespace TP_CAI
             return $"{IDcuenta};{IDcliente};{Credito};{Deuda}";
         }
 
-        public string Titulo
-        {
-            get
-            {
-                return $"{IDcuenta} - {IDcliente}";
-            }
-        }
-
         public static CuentaCorriente SeleccionarCuenta()
         {
             var modelo = CuentaCorriente.CrearModeloBusqueda();
@@ -67,20 +48,20 @@ namespace TP_CAI
                 }
             }
 
-            Console.WriteLine("No se ha encontrado una solicitud que coincida con los criterios indicados." + Environment.NewLine);
+            Console.WriteLine(Environment.NewLine + "No se ha encontrado una solicitud que coincida con los criterios indicados.");
             return null;
         }
 
         public void MostrarEstadoCuenta()
         {
-            Console.WriteLine($"ID cuenta: {IDcuenta}");
+            Console.WriteLine(Environment.NewLine + $"ID cuenta: {IDcuenta}");
             Console.WriteLine($"Crédito: {Credito}");
             Console.WriteLine($"Deuda: {Deuda}");
         }
 
         public void MostrarCuenta()
         {
-            Console.WriteLine($"ID cuenta: {IDcuenta}");
+            Console.WriteLine(Environment.NewLine + $"ID cuenta: {IDcuenta}");
             Console.WriteLine($"Cliente: {IDcliente}");
         }
 
@@ -90,12 +71,13 @@ namespace TP_CAI
             bool flag = false;
             do
             {
-                Console.WriteLine("Ingrese el número de la cuenta a buscar.");
+                Console.WriteLine(Environment.NewLine + "Ingrese el número de la cuenta a buscar.");
                 var cuentaABuscar = Console.ReadLine();
 
                 if (!int.TryParse(cuentaABuscar, out var salida))
                 {
-                    Console.WriteLine("Usted ingreso un valor incorrecto. Intente nuevamente." + Environment.NewLine);
+                    Console.WriteLine(Environment.NewLine + "Usted ingresó un valor incorrecto. Intente nuevamente.");
+                    flag = false;
                     continue;
                 }
                 else
@@ -128,15 +110,20 @@ namespace TP_CAI
             var cliente = Cliente.SeleccionarCliente(idcliente);
             var idcuenta = cliente.IDcuenta;
             var cuenta = CuentaCorriente.SeleccionarCuentaDebito(idcuenta);
+            var cuenta2 = CuentaCorriente.SeleccionarCuentaDebito(idcuenta);
 
             cuenta.Deuda = cuenta.Deuda + monto;
+
+            RegistroCuentas.Remove(cuenta2.IDcuenta);
+            RegistroCuentas.Add(cuenta.IDcuenta, cuenta);
 
             GrabarCuentas();
         }
 
         public static CuentaCorriente SeleccionarCuentaDebito(int idcuenta)
         {
-            var modelo = CuentaCorriente.CrearModeloBusqueda(idcuenta);
+            var modelo = new CuentaCorriente();
+            modelo.IDcuenta = idcuenta;
 
             foreach (var cuenta in RegistroCuentas.Values)
             {
@@ -146,7 +133,6 @@ namespace TP_CAI
                 }
             }
 
-            Console.WriteLine("No se ha encontrado una solicitud que coincida con los criterios indicados." + Environment.NewLine);
             return null;
         }
 
@@ -162,14 +148,6 @@ namespace TP_CAI
             }
         }
 
-        public static CuentaCorriente CrearModeloBusqueda(int idcuenta)
-        {
-            var modelo = new CuentaCorriente();
-            modelo.IDcliente = idcuenta;
-
-            return modelo;
-        }
-
         public bool Comparativa(CuentaCorriente modelo)
         {
             if (IDcuenta != modelo.IDcuenta)
@@ -182,9 +160,20 @@ namespace TP_CAI
             }
         }
 
-        public void Modificar(double monto)
+        public static void CargarCuentas()
         {
-            Deuda = Deuda + monto;
+            if (File.Exists(nombreArchivo))
+            {
+                using (var reader = new StreamReader(nombreArchivo))
+                {
+                    while (!reader.EndOfStream)
+                    {
+                        var linea = reader.ReadLine();
+                        var cuenta = new CuentaCorriente(linea);
+                        RegistroCuentas.Add(cuenta.IDcuenta, cuenta);
+                    }
+                }
+            }
         }
     }
 }

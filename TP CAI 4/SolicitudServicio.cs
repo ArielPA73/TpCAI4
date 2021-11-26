@@ -12,18 +12,7 @@ namespace TP_CAI
         const string nombreArchivo = "RegistroSolicitudes.txt";
         public SolicitudServicio()
         {
-            if (File.Exists(nombreArchivo))
-            {
-                using (var reader = new StreamReader(nombreArchivo))
-                {
-                    while (!reader.EndOfStream)
-                    {
-                        var linea = reader.ReadLine();
-                        var solicitud = new SolicitudServicio(linea);
-                        RegistroSolicitudes.Add(solicitud.IDsolicitud, solicitud);
-                    }
-                }
-            }
+            
         }
 
         public SolicitudServicio(string linea)
@@ -45,7 +34,9 @@ namespace TP_CAI
             EsUrgente = datos[13];
             RetiroEnPuerta = datos[14];
             EntregaEnPuerta = datos[15];
-            EsInternacional = datos[16];
+            DomicilioOrigen = datos[16];
+            RegionOrigen = datos[17];
+            RegionDestino = datos[18];
         }
 
         public int IDsolicitud { get; set; }
@@ -55,7 +46,7 @@ namespace TP_CAI
         public string DomicilioEntrega { get; set; }
         public string Receptor { get; set; }
         public string EstadoSolicitud { get; set; }
-        public double PrecioAFacturar { get; set; }
+        public float PrecioAFacturar { get; set; }
         public string LocalidadOrigen { get; set; }
         public string ProvinciaOrigen { get; set; }
         public string LocalidadDestino { get; set; }
@@ -64,41 +55,34 @@ namespace TP_CAI
         public string EsUrgente { get; set; }
         public string RetiroEnPuerta { get; set; }
         public string EntregaEnPuerta { get; set; }
-        public string EsInternacional { get; set; }
+        public string DomicilioOrigen { get; set; }
+        public string RegionOrigen { get; set; }
+        public string RegionDestino { get; set; }
 
         private static readonly Dictionary<int, SolicitudServicio> RegistroSolicitudes = new Dictionary<int, SolicitudServicio>();
 
-        public string Titulo
-        {
-            get
-            {
-                return $"{IDsolicitud} - {IDcliente}";
-            }
-        }
-
         public string ObtenerLineaDatos()
         {
-            return $"{IDsolicitud};{IDcliente};{Tiposolicitud};{PesoKg};{DomicilioEntrega};{Receptor};{EstadoSolicitud};{PrecioAFacturar};{LocalidadOrigen};{ProvinciaOrigen};{LocalidadDestino};{ProvinciaDestino};{PaisDestino};{EsUrgente};{RetiroEnPuerta};{EntregaEnPuerta};{EsInternacional}";
+            return $"{IDsolicitud};{IDcliente};{Tiposolicitud};{PesoKg};{DomicilioEntrega};{Receptor};{EstadoSolicitud};{PrecioAFacturar};{LocalidadOrigen};{ProvinciaOrigen};{LocalidadDestino};{ProvinciaDestino};{PaisDestino};{EsUrgente};{RetiroEnPuerta};{EntregaEnPuerta};{DomicilioOrigen};{RegionOrigen};{RegionDestino}";
         }
 
         public static SolicitudServicio IngresarSolicitud(int idcliente)
         {
+            Console.Clear();
             var solicitud = new SolicitudServicio();
             bool salir = false;
             solicitud.IDcliente = idcliente;
-            //solicitud.IDsolicitud = GenerarIDsolicitud();
-            solicitud.IDsolicitud = 1224;
+            solicitud.IDsolicitud = GenerarIDsolicitud();
 
+            Console.WriteLine("Nueva solicitud de servicio." + Environment.NewLine);
+            Console.WriteLine("Seleccione el tipo de servicio:");
+            Console.WriteLine("1- Correspondencia (hasta 500 gramos).");
+            Console.WriteLine("2- Encomienda.");
+
+            Console.WriteLine(Environment.NewLine + "Ingrese una opción y presione [Enter]");
 
             do
-            {
-                Console.WriteLine("Nueva solicitud de servicio." + Environment.NewLine);
-                Console.WriteLine("Seleccione el tipo de servicio:");
-                Console.WriteLine("1- Correspondencia (hasta 500 gramos).");
-                Console.WriteLine("2- Encomienda.");
-                Console.WriteLine("9- Volver al menú principal.");
-
-                Console.WriteLine(Environment.NewLine + "Ingrese una opción y presione [Enter]");
+            {    
                 var opcion = Console.ReadLine();
 
                 switch (opcion)
@@ -112,29 +96,34 @@ namespace TP_CAI
                     case "2":
                         solicitud.Tiposolicitud = "Encomienda";
                         bool flag = false;
+
                         do
                         {
-                            Console.WriteLine("Ingrese el peso de la encomienda (en Kg).");
+                            Console.WriteLine(Environment.NewLine + "Ingrese el peso de la encomienda (en Kg).");
                             var ingreso = Console.ReadLine();
 
                             if (!double.TryParse(ingreso, out var pesoEncomienda))
                             {
-                                Console.WriteLine("No ha ingresado un peso válido. Por favor, intente nuevamente." + Environment.NewLine);
+                                Console.WriteLine(Environment.NewLine + "No ha ingresado un peso válido. Por favor, intente nuevamente.");
+                                flag = true;
                                 continue;
                             }
 
                             if (pesoEncomienda < 0.5)
                             {
-                                Console.WriteLine("El peso de la encomienda no puede ser menor a 0.5Kg." + Environment.NewLine);
+                                Console.WriteLine(Environment.NewLine + "El peso de la encomienda no puede ser menor a 0.5Kg.");
+                                flag = true;
                                 continue;
                             }
 
                             if (pesoEncomienda > 30)
                             {
-                                Console.WriteLine("El peso de la encomienda no puede ser mayor a 30Kg." + Environment.NewLine);
+                                Console.WriteLine(Environment.NewLine + "El peso de la encomienda no puede ser mayor a 30Kg.");
+                                flag = true;
                                 continue;
                             }
 
+                            flag = false;
                             solicitud.PesoKg = pesoEncomienda;
 
                         } while (flag);
@@ -142,48 +131,104 @@ namespace TP_CAI
                         salir = true;
                         break;
 
-                    case "9":
-                        salir = true;
-                        break;
-
                     default:
-                        Console.WriteLine(Environment.NewLine + "No ha ingresado una opción del menú. Por favor, intente de nuevo." + Environment.NewLine);
+                        Console.WriteLine(Environment.NewLine + "No ha ingresado una opción del menú. Por favor, intente de nuevo.");
                         break;
                 }
             } while (!salir);
 
-            solicitud.LocalidadOrigen = Ingreso("Ingrese la localidad de origen del envío.");
-            solicitud.ProvinciaOrigen = Ingreso("Ingrese la provincia de origen del envío.");
-            solicitud.DomicilioEntrega = Ingreso("Ingrese el domicilio de destino.");
-            solicitud.LocalidadDestino = Ingreso("Ingrese la localidad de destino.");
-            solicitud.EsInternacional = TarifaDiferencial("¿El envío es internacional? S/N");
+            bool check = false;
+            string localidad = "";
+            do
+            {
+                var ingreso = Ingreso("Ingrese la localidad de origen del envío.");
+                
+                bool validar = Localidad.ValidarLocalidad(ingreso);
 
-            if (solicitud.EsInternacional == "Si")
+                if(!validar)
+                {
+                    Console.WriteLine(Environment.NewLine + "La localidad ingresada no existe en nuestros registros. Por favor, intente de nuevo.");
+                    check = true;
+                }
+                else
+                {
+                    check = false;
+                }
+
+                localidad = ingreso;
+
+            } while (check);
+
+            solicitud.LocalidadOrigen = localidad;
+
+            var provincia = Localidad.SeleccionarLocalidad(localidad);
+            solicitud.ProvinciaOrigen = provincia.Provincia;
+            solicitud.RegionOrigen = provincia.Región;
+            
+            string destino = "";
+            do
             {
-                solicitud.PaisDestino = Ingreso("Ingrese el país de destino.");
-                solicitud.ProvinciaDestino = null;
-            }
-            else
-            {
-                solicitud.ProvinciaDestino = Ingreso("Ingrese la provincia de destino.");
-                solicitud.PaisDestino = "Argentina";
-            }
+                check = false;
+                var ingreso = Ingreso("Ingrese la localidad de destino del envío.");
+
+                bool validar = Localidad.ValidarLocalidad(ingreso);
+
+                if (!validar)
+                {
+                    Console.WriteLine(Environment.NewLine + "La localidad ingresada no existe en nuestros registros. Por favor, intente de nuevo.");
+                    check = true;
+                }
+                else
+                {
+                    check = false;
+                }
+
+                destino = ingreso;
+
+            } while (check);
+
+            solicitud.LocalidadDestino = destino;
+
+            var Destino = Localidad.SeleccionarLocalidad(destino);
+            solicitud.ProvinciaDestino = Destino.Provincia;
+            solicitud.PaisDestino = Destino.País;
+            solicitud.RegionDestino = Destino.Región;
 
             solicitud.Receptor = Ingreso("Ingrese el nombre y apellido del receptor del envío.");
             solicitud.EsUrgente = TarifaDiferencial("¿Desea que el envío sea con servicio urgente? S/N (El mismo cuenta con una tarifa adicional.)");
-            solicitud.RetiroEnPuerta = TarifaDiferencial("¿Desea que el servicio incluya retiro en puerta? S/N (El mismo cuenta con una tarifa adicional).");
-            solicitud.EntregaEnPuerta = TarifaDiferencial("¿Desea que el servicio incluya entrega en puerta? S/N (El mismo cuenta con una tarifa adicional).");
+            
+            var retiropuerta = TarifaDiferencial("¿Desea que el servicio incluya retiro en puerta? S/N (El mismo cuenta con una tarifa adicional).");
+
+            if(retiropuerta == "Si")
+            {
+                solicitud.DomicilioOrigen = Ingreso("Ingrese el domicilio donde se retirará el envío.");              
+            }
+            else
+            {
+                solicitud.DomicilioOrigen = null;
+            }
+
+            solicitud.RetiroEnPuerta = retiropuerta;
+
+            var entregapuerta = TarifaDiferencial("¿Desea que el servicio incluya entrega en puerta? S/N (El mismo cuenta con una tarifa adicional).");
+            
+            if (entregapuerta == "Si")
+            {
+                solicitud.DomicilioEntrega = Ingreso("Ingrese el domicilio de destino.");
+            }
+            else
+            {
+                solicitud.DomicilioEntrega = null;
+            }
+
+            solicitud.EntregaEnPuerta = entregapuerta;
             solicitud.PrecioAFacturar = Tarifa.CalcularPrecio(solicitud);
             solicitud.EstadoSolicitud = "Recibida";
 
+            RegistroSolicitudes.Add(solicitud.IDsolicitud, solicitud);
             GrabarSolicitudes();
 
-            //var idcliente = solicitud.IDcliente;
-            //var cuenta = Cliente.SeleccionarCliente(idcliente);
-            //var idcuenta = cuenta.IDcuenta;
-            //var Idcuenta = CuentaCorriente.SeleccionarCuentaDebito(idcuenta);
-            //var monto = solicitud.PrecioAFacturar;
-            //Idcuenta.Modificar(monto);
+            CuentaCorriente.Debitar(solicitud);
 
             return solicitud;
         }
@@ -192,56 +237,56 @@ namespace TP_CAI
         {
             var modelo = SolicitudServicio.CrearModeloBusqueda();
 
-            foreach (var solicitud in RegistroSolicitudes.Values)
+            foreach(var solicitud in RegistroSolicitudes.Values)
             {
-                if (solicitud.CoincideCon(modelo))
+                if(solicitud.CoincideCon(modelo))
                 {
                     return solicitud;
                 }
             }
 
-            Console.WriteLine("No se ha encontrado una solicitud que coincida con los criterios indicados." + Environment.NewLine);
+            Console.WriteLine(Environment.NewLine + "No se ha encontrado una solicitud que coincida con los criterios indicados.");
             return null;
         }
 
         public void MostrarEstadoSolicitud()
         {
-            Console.WriteLine($"ID solicitud: {IDsolicitud}");
+            Console.WriteLine(Environment.NewLine + $"ID solicitud: {IDsolicitud}");
             Console.WriteLine($"Estado: {EstadoSolicitud}");
         }
 
         public void MostrarSolicitud()
         {
-            Console.WriteLine($"ID solicitud: {IDsolicitud}");
+            Console.WriteLine(Environment.NewLine +  $"ID solicitud: {IDsolicitud}");
             Console.WriteLine($"Cliente: {IDcliente}");
             Console.WriteLine(Tiposolicitud);
-            Console.WriteLine($"Domicilio entrega: {DomicilioEntrega}");
             Console.WriteLine($"Localidad destino: {LocalidadDestino}");
 
-            if (EsInternacional == "No")
+            if(PaisDestino == "Argentina")
             {
                 Console.WriteLine($"Provincia destino: {ProvinciaDestino}");
             }
-
-            if (EsInternacional == "Si")
+            else
             {
                 Console.WriteLine($"País destino: {PaisDestino}");
             }
-
+            
         }
 
         private static string Ingreso(string titulo)
         {
             bool flag = false;
             string ingreso;
+            Console.WriteLine(Environment.NewLine + titulo);
+
             do
-            {
-                Console.WriteLine(titulo);
+            {    
                 ingreso = Console.ReadLine();
 
-                if (string.IsNullOrWhiteSpace(ingreso))
+                if(string.IsNullOrWhiteSpace(ingreso))
                 {
-                    Console.WriteLine("Debe ingresar un valor." + Environment.NewLine);
+                    Console.WriteLine(Environment.NewLine + "Este campo no puede estar vacío. Por favor, intente de nuevo.");
+                    flag = false;
                     continue;
                 }
                 else
@@ -258,10 +303,10 @@ namespace TP_CAI
         {
             bool flag = false;
             string ingreso = "";
-
+            
             do
             {
-                Console.WriteLine(titulo);
+                Console.WriteLine(Environment.NewLine + titulo);
                 var key = Console.ReadKey(intercept: true);
                 if (key.Key == ConsoleKey.S)
                 {
@@ -275,16 +320,12 @@ namespace TP_CAI
                 }
                 else
                 {
-                    Console.WriteLine("Usted ingresó un valor incorrecto, intente de nuevo." + Environment.NewLine);
+                    Console.WriteLine(Environment.NewLine + "Usted ingresó un valor incorrecto, intente de nuevo.");
+                    flag = false;
                 }
             } while (!flag);
 
             return ingreso;
-        }
-
-        public static void AgregarSolicitud(SolicitudServicio solicitud)
-        {
-            RegistroSolicitudes.Add(solicitud.IDsolicitud, solicitud);
         }
 
         public static SolicitudServicio CrearModeloBusqueda()
@@ -293,7 +334,7 @@ namespace TP_CAI
             bool flag = false;
             do
             {
-                Console.WriteLine("Ingrese el número de la solicitud a buscar.");
+                Console.WriteLine(Environment.NewLine + "Ingrese el número de la solicitud a buscar.");
                 var solicitudABuscar = Console.ReadLine();
 
                 if (!int.TryParse(solicitudABuscar, out var salida))
@@ -314,14 +355,14 @@ namespace TP_CAI
 
         public bool CoincideCon(SolicitudServicio modelo)
         {
-            if (IDsolicitud != modelo.IDsolicitud)
-            {
+           if(IDsolicitud != modelo.IDsolicitud)
+           {
                 return false;
-            }
-            else
-            {
+           }
+           else
+           {
                 return true;
-            }
+           }
         }
 
         private static void GrabarSolicitudes()
@@ -352,16 +393,34 @@ namespace TP_CAI
                 {
                     flag = false;
                 }
+
             } while (!flag);
 
             return idsolicitud;
         }
 
-        public static bool Existe(int idsolicitud)
+        public static bool Existe (int idsolicitud)
         {
             return RegistroSolicitudes.ContainsKey(idsolicitud);
         }
+
+        public static void CargarSolicitudes()
+        {
+            if (File.Exists(nombreArchivo))
+            {
+                using (var reader = new StreamReader(nombreArchivo))
+                {
+                    while (!reader.EndOfStream)
+                    {
+                        var linea = reader.ReadLine();
+                        var solicitud = new SolicitudServicio(linea);
+                        RegistroSolicitudes.Add(solicitud.IDsolicitud, solicitud);
+                    }
+                }
+            }
+        }
+
     }
 
-
+    
 }
